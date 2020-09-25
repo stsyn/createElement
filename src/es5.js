@@ -11,7 +11,7 @@ function __isElement(obj) {
 
 function __createElement(tag, properties, children, notationCreator) {
   var element = document.createElement(tag), i;
-  var applyAsJsField = ['innerHTML', 'checked', 'disabled', 'value', 'selected', 'className', 'crossOrigin'];
+  var applyAsJsField = ['innerHTML', 'checked', 'disabled', 'value', 'selected', 'className', 'crossOrigin', 'muted'];
   var applyNotAsAttribute = applyAsJsField.concat(['events', 'dataset', 'style']);
 
   for (i in properties) {
