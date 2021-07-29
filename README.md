@@ -20,13 +20,14 @@ Similar with `React.createElement` syntax, but all child elements should be in a
 
 ***Note 1:*** keep in mind, that **you can't insert the same HTMLElement into multiple different places on the page**. This library makes a deep copy, when it detects not-empty parentNode property, but **it will be the copy from the current state of the element**. Avoid reusage of dynamically changable elements or consider *Notation mode*;
 
-***Note 2:*** single child element can be inserted without array, like in `createFromNotation`;
+***Note 2:*** single child element can be inserted without array;
 
 ***Note 3:*** generally speaking any type is acceptable as child element, but **arrays are unacceptable**, since they will be confused with **Notation mode**. Theoretically you can still use common JS objects, which are not HTMLElements or arrays, but you should avoid doing this;
 
 ***Note 4:*** `null` or `undefined` in children array won't be rendered.
 
 ## createFromNotation(CSS selector, options, childElement1, childElement2...)
+**DEPRECATED, WILL BE REMOVED IN COMPONENTS VERSION**
 The same as `createElement`, but, as with `React.createElement`, all children should be defined as additional arguments.
 
 ## fillElement(container, children)
@@ -52,7 +53,7 @@ Inserts `container` in the place of `element` and puts `element` inside.
 - **element** — HTMLElement to be inserted inside of `container`.
 
 # Notation mode
-Initially designed to singifically reduce amount of code. You may omit function word and pass not HTMLElement as in  `createFromNotation(CSS selector, options, childElement1, childElement2...)`, but plain notation array `[CSS selector, options, childElement1, childElement2...]`. You can mix normal mode with Notation mode, when you need to store specific elements in variables.
+Initially designed to singifically reduce amount of code. You may omit function word and pass not HTMLElement as in  `createElement(CSS selector, options, [childElement1, childElement2...])`, but plain notation array `[CSS selector, options, [childElement1, childElement2...]]`. You can mix normal mode with Notation mode, when you need to store specific elements in variables.
 
 Consider two examples:
 
@@ -61,7 +62,7 @@ createElement('div', [
   createElement('h4', name),
   createElement('table.table', [
     renderTableHead(),
-    areaTop = createElement('tbody')]
+    areaTop = createElement('tbody')
   ]),
   createElement('.toggle-box-container', [
     createElement('table.table', [
@@ -73,21 +74,19 @@ createElement('div', [
 ```
 
 ```javascript
-createFromNotation('div', 
+createElement('div', [
   ['h4', name],
-  ['table.table', 
+  ['table.table', [
     renderTableHead(),
     areaTop = createElement('tbody')
-  ],
-  ['.toggle-box-container', 
-    ['table.table', 
+  ]],
+  ['.toggle-box-container', [
+    ['table.table', [
       renderTableHead(),
       areaHidden = createElement('tbody')
-    ]
-  ]
-)
+    ]]
+  ]]
+])
 ```
 
-***Note 1:*** You may use Notation mode with `createElement` function, but you will need additional array for children elements;
-
-***Note 2:*** While you can mix Notation mode with normal mode, you can't mix **definions** from `createElement` and `createFromNotation`. Format from the closest parent should be used.
+***Note:*** While you can mix Notation mode with normal mode, you can't mix **definions** from `createElement` and `createFromNotation`. Format from the closest parent should be used.
