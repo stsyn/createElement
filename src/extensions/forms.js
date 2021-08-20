@@ -21,7 +21,9 @@ var __temp__ = (function() {
       var propName = child[1] && child[1].name;
 
       if (__notNull(propName)) {
-        child[1].value = __notNull(data[propName]) ? data[propName] : (child[1].value || '');
+        if (!__notNull(data[propName])) data[propName] = __notNull(child[1].value) ? child[1].value : '';
+
+        child[1].value = data[propName];
 
         child[1].onchange = function(event) {
           var canProceed = !oldOnChange || oldOnChange(event);
