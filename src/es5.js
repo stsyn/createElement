@@ -75,7 +75,11 @@ var ___temp___ = (function() {
           makeTextNode();
         }
         var parsed = __repackAndValidate(c[0], c[1], c[2]);
-        element.appendChild(__createElement(parsed[0], parsed[1], parsed[2]));
+        if (__isElement(parsed)) {
+          element.appendChild(parsed);
+        } else {
+          element.appendChild(__createElement(parsed[0], parsed[1], parsed[2]));
+        }
       } else if (!__isElement(c)) {
         if (textCollection === null) {
           textCollection = String(c);
@@ -140,6 +144,7 @@ var ___temp___ = (function() {
       }
     } else {
       var data = tag(properties, children);
+      if (__isElement(data)) return data;
       return __repackAndValidate(data[0], data[1], data[2]);
     }
 
