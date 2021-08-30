@@ -26,6 +26,7 @@ var ___temp___ = (function() {
 
     element = document.createElement(tag);
     for (i in properties) {
+      if (i === '_cast') continue;
       if (i.indexOf('on') === 0) {
         element.addEventListener(i.substring(2), properties[i]);
       } else if (applyNotAsAttribute.indexOf(i) === -1) {
@@ -51,6 +52,11 @@ var ___temp___ = (function() {
     if (children && children.length) {
       __fillElement(element, children);
     }
+
+    if (typeof properties._cast === 'function') {
+      properties._cast(element);
+    }
+
     return element;
   }
 
