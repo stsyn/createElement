@@ -22,11 +22,10 @@ var ___temp___ = (function() {
 
     var element, i;
     var applyAsJsField = ['innerHTML', 'checked', 'disabled', 'value', 'selected', 'className', 'crossOrigin', 'muted'];
-    var applyNotAsAttribute = applyAsJsField.concat(['events', 'dataset', 'style']);
+    var applyNotAsAttribute = applyAsJsField.concat(['events', 'dataset', 'style', '_cast', '_redraw']);
 
     element = document.createElement(tag);
     for (i in properties) {
-      if (i === '_cast') continue;
       if (i.indexOf('on') === 0) {
         element.addEventListener(i.substring(2), properties[i]);
       } else if (applyNotAsAttribute.indexOf(i) === -1) {
@@ -55,6 +54,21 @@ var ___temp___ = (function() {
 
     if (typeof properties._cast === 'function') {
       properties._cast(element);
+    }
+
+    if (typeof properties._redraw === 'function') {
+      var renderFunction = function(rawNotation) {
+        if (!element.parentNode) {
+          throw new Error('Cannot redraw element without parent node!');
+        }
+
+        var parent = element.parentNode;
+        var update = createElement(rawNotation[0], rawNotation[1], rawNotation[2]);
+        parent.replaceChild(update, element);
+        element = update;
+      }
+
+      properties._redraw(renderFunction);
     }
 
     return element;
@@ -103,7 +117,7 @@ var ___temp___ = (function() {
     makeTextNode();
   }
 
-  function __repackAndValidate(tag, properties, children) {
+  function __repackAndValidate(tag, properties, children, noCast) {
     if (__isElement(tag)) {
       return [tag];
     }
@@ -135,26 +149,45 @@ var ___temp___ = (function() {
       properties = {};
     }
 
-    if (typeof tag === 'string') {
-      var classes = (tag || '').split('.');
-      tag = classes.shift();
-      if (classes.length > 0) {
-        properties.className = (properties.className ? properties.className + ' ' : '') + classes.join(' ');
-      }
-      var id = tag.split('#');
-      tag = id.shift() || 'div';
-      id = id.shift();
+    if (!noCast) {
+      if (typeof tag === 'string') {
+        var classes = (tag || '').split('.');
+        tag = classes.shift();
+        if (classes.length > 0) {
+          properties.className = (properties.className ? properties.className + ' ' : '') + classes.join(' ');
+        }
+        var id = tag.split('#');
+        tag = id.shift() || 'div';
+        id = id.shift();
 
-      if (id && !properties.id) {
-        properties.id = id;
+        if (id && !properties.id) {
+          properties.id = id;
+        }
+      } else {
+        var parsedChildren = __validateChildren(children);
+        var data = tag(properties, parsedChildren);
+        if (__isElement(data)) return data;
+        return __repackAndValidate(data[0], data[1], data[2]);
       }
-    } else {
-      var data = tag(properties, children);
-      if (__isElement(data)) return data;
-      return __repackAndValidate(data[0], data[1], data[2]);
     }
 
     return [tag, properties, children];
+  }
+
+  function __validateChildren(children) {
+    if (!children) return;
+    if (!Array.isArray(children)) return children;
+
+    return children.map(function(child) {
+      if (!Array.isArray(child)) return child;
+
+      var output = __repackAndValidate(child[0], child[1], child[2], true);
+      if (output[2]) {
+        output[2] = __validateChildren(output[2]);
+      }
+
+      return output;
+    });
   }
 
   function createElement(tag, properties, children) {
