@@ -96,7 +96,7 @@ var ___temp___ = (function() {
         }
         var parsed = __repackAndValidate(c[0], c[1], c[2]);
         if (__isElement(parsed)) {
-          element.appendChild(parsed);
+          element.appendChild(parsed.parentNode == null ? parsed : parsed.cloneNode(true));
         } else {
           element.appendChild(__createElement(parsed[0], parsed[1], parsed[2]));
         }
