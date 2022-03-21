@@ -39,6 +39,7 @@ var __temp__ = (function() {
 
         child[1]._cast = function(elem) {
           element = elem;
+          oldCast && oldCast(elem);
         }
 
         child[1].onchange = function(event) {
