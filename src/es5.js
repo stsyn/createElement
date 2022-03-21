@@ -26,6 +26,12 @@ var ___temp___ = (function() {
 
     element = document.createElement(tag);
     for (i in properties) {
+      if (properties[i] === null || properties[i] === undefined ||
+        (typeof properties[i] === 'object' && applyNotAsAttribute.indexOf(i) === -1)
+      ) {
+        continue;
+      }
+
       if (i.indexOf('on') === 0) {
         element.addEventListener(i.substring(2), properties[i]);
       } else if (applyNotAsAttribute.indexOf(i) === -1) {
@@ -63,7 +69,16 @@ var ___temp___ = (function() {
         }
 
         var parent = element.parentNode;
-        var update = createElement(rawNotation[0], rawNotation[1], rawNotation[2]);
+        var update;
+        if (__isArray(rawNotation)) {
+          update = createElement(rawNotation[0], rawNotation[1], rawNotation[2]);
+        } else if (typeof rawNotation === 'function') {
+          throw new Error('_redraw callback does not accept functions as argument');
+        } else if (typeof rawNotation === 'string' || typeof rawNotation === 'number') {
+          update = document.createTextNode(rawNotation);
+        } else {
+          update = rawNotation;
+        }
         parent.replaceChild(update, element);
         element = update;
       }
@@ -96,22 +111,24 @@ var ___temp___ = (function() {
         }
         var parsed = __repackAndValidate(c[0], c[1], c[2]);
         if (__isElement(parsed)) {
-          element.appendChild(parsed.parentNode == null ? parsed : parsed.cloneNode(true));
+          element.appendChild(parsed);
         } else {
           element.appendChild(__createElement(parsed[0], parsed[1], parsed[2]));
         }
-      } else if (!__isElement(c)) {
+      } else if (typeof c === 'function') {
+        throw new Error('Function cannot be used as a child');
+      } else if (__isElement(c)) {
+        if (isPreviousElementTextNode) {
+          makeTextNode();
+        }
+        element.appendChild(c);
+      } else {
         if (textCollection === null) {
           textCollection = String(c);
         } else {
           textCollection += String(c);
         }
         isPreviousElementTextNode = true;
-      } else {
-        if (isPreviousElementTextNode) {
-          makeTextNode();
-        }
-        element.appendChild(c.parentNode == null ? c : c.cloneNode(true));
       }
     }
     makeTextNode();
