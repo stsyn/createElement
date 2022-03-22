@@ -57,10 +57,10 @@ Inserts `container` in the place of `element` and puts `element` inside.
 - **element** — HTMLElement to be inserted inside of `container`.
 
 # Notation mode
-Initially designed to singifically reduce amount of code. You may omit function word and pass not HTMLElement as in 
+Initially designed to singifically reduce amount of code, allows code reusage. You may omit function word and pass not HTMLElement as in 
 `createElement(CSS selector, options, [childElement1, childElement2...])`, but plain notation array 
 `[CSS selector, options, [childElement1, childElement2...]]`. You can mix normal mode with Notation mode, when you need 
-to store specific elements in variables.
+to store specific elements in variables, but it's **discouraged**, use *\_cast* prop.
 
 Consider two examples:
 
@@ -99,3 +99,38 @@ createElement('div', [
 # Components
 You can use functions accepting `options` and `children` parameters instead of CSS selectors. Can return either a
 HTML element or *Notation*.
+
+Example of the component, which shows low-quality image preview and replaces it with full image once its loaded.
+
+```javascript
+var PreloadableImage = function(props, children) {
+  const { preloadSrc, _cast, _containerCast, onload, id, className, style, ...rest } = props;
+  let redrawImage;
+  let fullImage;
+
+  const thumb = ['img', { src: props.preloadSrc, _redraw: (e) => redrawImage = e }];
+  const full = ['img', {
+    style: { display: 'none' },
+    _cast: (e) => {
+      _cast && _cast(e);
+      fullImage = e
+    },
+    onload: () => {
+      onload && onload();
+      redrawImage(fullImage);
+      fullImage.style.removeProperty('display');
+    },
+    ...rest,
+  }];
+  
+  return ['', { id, className, _cast: _contaierCast }, [thumb, full]];
+}
+
+createElement(ImageThumb, {
+  className: 'spoiler',
+  index,
+  preloadSrc: image.preloadSrc,
+  onload: image.onThumbLoad,
+  _containerCast: (e) => image.thumbElement = e,
+});
+```
