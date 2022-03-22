@@ -18,12 +18,13 @@ Similar with `React.createElement` syntax, but all child elements should be in a
   - *dataset* — allows to set `data-attributes` on the element;
   - *className* — combined with retrieved from **CSS selector**, recommeded for dynamic classes;
   - *id* — takes priority over retrieved from **CSS selector**, recommeded for dynamic IDs;
+  - \_cast — can be function, which will be called with HTMLElement argument when it will be created;
+  - \_redraw - can be function, which will be called with rerender function argument, which accepts *Notations* or *HTMLElement*;
   - *onX* — events.
 - **children** — **[can be omited]** array of HTMLElements or any primitive types to insert into created element;
 
 ***Note 1:*** keep in mind, that **you can't insert the same HTMLElement into multiple different places on the page**. 
-This library makes a deep copy, when it detects not-empty parentNode property, but **it will be the copy from the 
-current state of the element**. Avoid reusing of dynamically changing elements or consider *Notation mode* / *Components*;
+Unlike current master, this version does **not** perform copying and will just remove element from the previous place. Use *Notation mode* or *Components*;
 
 ***Note 2:*** single child element can be inserted without array;
 
