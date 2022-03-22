@@ -85,12 +85,12 @@ createElement('div', [
   ['h4', name],
   ['table.table', [
     renderTableHead(),
-    areaTop = createElement('tbody')
+    ['tbody', { _cast: (e) => areaTop = e }]
   ]],
   ['.toggle-box-container', [
     ['table.table', [
       renderTableHead(),
-      areaHidden = createElement('tbody')
+      ['tbody', { _cast: (e) => areaHidden = e }]
     ]]
   ]]
 ])
