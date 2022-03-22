@@ -18,8 +18,8 @@ Similar with `React.createElement` syntax, but all child elements should be in a
   - *dataset* — allows to set `data-attributes` on the element;
   - *className* — combined with retrieved from **CSS selector**, recommeded for dynamic classes;
   - *id* — takes priority over retrieved from **CSS selector**, recommeded for dynamic IDs;
-  - \_cast — can be function, which will be called with HTMLElement argument when it will be created;
-  - \_redraw - can be function, which will be called with rerender function argument, which accepts *Notations* or *HTMLElement*;
+  - *\_cast* — can be function, which will be called with HTMLElement argument when it will be created;
+  - *\_redraw* - can be function, which will be called with rerender function argument, which accepts *Notations* or *HTMLElement*;
   - *onX* — events.
 - **children** — **[can be omited]** array of HTMLElements or any primitive types to insert into created element;
 
