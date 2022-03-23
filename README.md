@@ -1,3 +1,5 @@
+This version is deprecated and will no longer receive updates. Consider using/migrating to the components branch https://github.com/stsyn/createElement/tree/component
+
 # createElement
 Real-DOM dependencies-free imitator of React.createElement() designed to simplify creating HTMLElements from JavaScript code, when you for some reason don't want to use templates or frameworks.
 
