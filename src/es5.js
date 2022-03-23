@@ -74,11 +74,13 @@ var ___temp___ = (function() {
           update = createElement(rawNotation[0], rawNotation[1], rawNotation[2]);
         } else if (typeof rawNotation === 'function') {
           throw new Error('_redraw callback does not accept functions as argument');
-        } else if (typeof rawNotation === 'string' || typeof rawNotation === 'number') {
+        } else if (typeof rawNotation === 'string' || typeof rawNotation === 'number' || typeof rawNotation === 'boolean') {
           update = document.createTextNode(rawNotation);
-        } else {
+        } else if (__isElement(rawNotation)) {
           update = rawNotation;
-        }
+        } else {
+          throw new Error('Cannot redraw with ' + rawNotation);
+        } 
         parent.replaceChild(update, element);
         element = update;
       }
@@ -184,6 +186,7 @@ var ___temp___ = (function() {
         var parsedChildren = __validateChildren(children);
         var data = tag(properties, parsedChildren);
         if (__isElement(data)) return data;
+        if (!__isArray(data)) throw new Error('Component must return HTMLElement or Notation');
         return __repackAndValidate(data[0], data[1], data[2]);
       }
     }
