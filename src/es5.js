@@ -104,7 +104,7 @@ var ___temp___ = (function() {
 
     for (var i = 0; i < items.length; i++) {
       var c = items[i];
-      if (c === undefined || c === null) {
+      if (c === undefined || c === null || c === false) {
         continue;
       }
       if (__isArray(c)) {
