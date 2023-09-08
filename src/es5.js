@@ -153,7 +153,7 @@ const ___temp___ = (function() {
     if (typeof tag !== 'string' && typeof tag !== 'function') {
       throw new Error('Unacceptable CSS selector ' + tag);
     }
-    if (__isElement(children) || !__isArray(children)) {
+    if (children && __isElement(children) || !__isArray(children)) {
       children = [children];
     }
 
